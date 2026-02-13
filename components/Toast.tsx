@@ -45,7 +45,7 @@ export const Toast: React.FC<ToastProps> = ({ message, type, onClose }) => {
     <div className={`
       flex items-center bg-slate-900/95 backdrop-blur-md text-white pl-4 pr-3 py-3 rounded-2xl 
       shadow-2xl border border-white/10
-      animate-in fade-in slide-in-from-right-4 duration-300 pointer-events-auto
+      animate-toast-in pointer-events-auto
       max-w-xs group relative
     `}>
       {getIcon()}
