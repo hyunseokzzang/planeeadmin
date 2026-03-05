@@ -3,13 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const chartData = [
-  { name: 'Mon', value: 400 },
-  { name: 'Tue', value: 300 },
-  { name: 'Wed', value: 600 },
-  { name: 'Thu', value: 800 },
-  { name: 'Fri', value: 500 },
-  { name: 'Sat', value: 900 },
-  { name: 'Sun', value: 1100 },
+  { name: 'Mon', users: 400, conversations: 240 },
+  { name: 'Tue', users: 300, conversations: 320 },
+  { name: 'Wed', users: 600, conversations: 450 },
+  { name: 'Thu', users: 800, conversations: 590 },
+  { name: 'Fri', users: 500, conversations: 480 },
+  { name: 'Sat', users: 900, conversations: 720 },
+  { name: 'Sun', users: 1100, conversations: 850 },
 ];
 
 const distributionData = [
@@ -57,6 +57,7 @@ const CountUp: React.FC<{ value: number; duration?: number; decimals?: number; s
 export const Dashboard: React.FC<DashboardProps> = ({ onboardingStep }) => {
   const [animationKey, setAnimationKey] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [hoveredKey, setHoveredKey] = useState<string | null>(null);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -71,6 +72,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ onboardingStep }) => {
     return () => clearInterval(interval);
   }, [onboardingStep]);
 
+  const stats = [
+    { id: 'users', label: 'Active Users', value: '1,284', trend: '+12.5%', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z', color: '#4f46e5' },
+    { id: 'conversations', label: 'Conversations', value: '42.8k', trend: '+5.2k', icon: 'M13 10V3L4 14h7v7l9-11h-7z', color: '#10b981' },
+    { id: 'response', label: 'Avg. Response', value: '184ms', trend: '-24ms', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', color: '#f59e0b' },
+    { id: 'success', label: 'Success Rate', value: '99.9%', trend: 'Stable', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', color: '#ef4444' },
+  ];
+
   return (
     <div className="space-y-8 animate-in fade-in duration-500" data-tour="dashboard-main">
       <div className="flex flex-col space-y-1">
@@ -78,21 +86,27 @@ export const Dashboard: React.FC<DashboardProps> = ({ onboardingStep }) => {
         <p className="text-slate-500 text-sm font-medium">Real-time system performance and query distribution.</p>
       </div>
 
-      {/* 상단 요약 카드: 카운트 애니메이션 제거, 카드 이동(translate) 제거, 수치만 우측 이동 */}
+      {/* 상단 요약 카드 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { label: 'Active Users', value: '1,284', trend: '+12.5%', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
-          { label: 'Avg. Response', value: '184ms', trend: '-24ms', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
-          { label: 'Success Rate', value: '99.9%', trend: 'Stable', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
-          { label: 'Requests', value: '42.8k', trend: '+5.2k', icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
-        ].map((stat, i) => (
+        {stats.map((stat, i) => (
           <div 
-            key={`${i}-${animationKey}`} 
-            className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-shadow duration-500 group animate-in zoom-in-95 fade-in" 
+            key={`${stat.id}-${animationKey}`} 
+            onMouseEnter={() => setHoveredKey(stat.id)}
+            onMouseLeave={() => setHoveredKey(null)}
+            className={`bg-white p-6 rounded-3xl border transition-all duration-500 group animate-in zoom-in-95 fade-in cursor-pointer
+              ${hoveredKey === stat.id ? 'border-indigo-200 shadow-xl scale-[1.02]' : 'border-slate-100 shadow-sm hover:shadow-md'}
+              ${hoveredKey && hoveredKey !== stat.id ? 'opacity-50 grayscale-[0.5]' : 'opacity-100'}
+            `} 
             style={{ animationDelay: `${i * 100}ms` }}
           >
             <div className="flex justify-between items-start mb-4">
-              <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+              <div 
+                className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300"
+                style={{ 
+                  backgroundColor: hoveredKey === stat.id ? stat.color : '#f8fafc',
+                  color: hoveredKey === stat.id ? 'white' : '#94a3b8'
+                }}
+              >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={stat.icon} />
                 </svg>
@@ -124,9 +138,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ onboardingStep }) => {
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData} key={animationKey}>
                 <defs>
-                  <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.1}/>
                     <stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorConversations" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.1}/>
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -137,12 +155,25 @@ export const Dashboard: React.FC<DashboardProps> = ({ onboardingStep }) => {
                 />
                 <Area 
                   type="monotone" 
-                  dataKey="value" 
+                  dataKey="users" 
                   stroke="#4f46e5" 
-                  strokeWidth={4} 
+                  strokeWidth={hoveredKey === 'users' ? 6 : 4} 
                   fillOpacity={1} 
-                  fill="url(#colorValue)" 
+                  fill="url(#colorUsers)" 
                   animationDuration={1500}
+                  strokeOpacity={hoveredKey === 'users' || !hoveredKey ? 1 : 0.1}
+                  fillOpacity={hoveredKey === 'users' || !hoveredKey ? 1 : 0.05}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="conversations" 
+                  stroke="#10b981" 
+                  strokeWidth={hoveredKey === 'conversations' ? 6 : 4} 
+                  fillOpacity={1} 
+                  fill="url(#colorConversations)" 
+                  animationDuration={1500}
+                  strokeOpacity={hoveredKey === 'conversations' || !hoveredKey ? 1 : 0.1}
+                  fillOpacity={hoveredKey === 'conversations' || !hoveredKey ? 1 : 0.05}
                 />
               </AreaChart>
             </ResponsiveContainer>
