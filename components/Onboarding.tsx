@@ -62,6 +62,13 @@ const steps: Step[] = [
     position: 'left',
     selector: '[data-tour="panel-save-btn"]',
     page: 'chat-manage'
+  },
+  {
+    title: "언제 어디서나 접근 가능한 저장 버튼",
+    description: "설정 항목이 많아 스크롤이 길어져도 걱정하지 마세요. 하단에 고정된 저장 바를 통해 어떤 위치에서든 즉시 설정을 반영할 수 있습니다.",
+    position: 'top',
+    selector: '[data-tour="fixed-save-bar"]',
+    page: 'ai-basic'
   }
 ];
 

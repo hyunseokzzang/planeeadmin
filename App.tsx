@@ -5,6 +5,7 @@ import { Header } from './components/Header';
 import { Dashboard } from './components/Dashboard';
 import { UserManagement } from './components/UserManagement';
 import { AIBasicSettings } from './components/AIBasicSettings';
+import { KnowledgeRegistration } from './components/KnowledgeRegistration';
 import { PlaceholderView } from './components/PlaceholderView';
 import { Toast, ToastType } from './components/Toast';
 import { ToastTest } from './components/ToastTest';
@@ -85,6 +86,7 @@ const App: React.FC = () => {
           />
         );
       case 'ai-basic': return <AIBasicSettings onNotify={showToast} />;
+      case 'kb-register': return <KnowledgeRegistration onNotify={showToast} />;
       case 'test-toast': return <ToastTest onNotify={showToast} />;
       default: return <PlaceholderView title="준비 중" description="상세 기능을 구현 중입니다." />;
     }
@@ -119,7 +121,7 @@ const App: React.FC = () => {
         </main>
       </div>
 
-      <div className="fixed bottom-6 right-6 z-[300] flex flex-col gap-3 pointer-events-none">
+      <div className="fixed bottom-28 right-6 z-[300] flex flex-col gap-3 pointer-events-none">
         {toasts.map(toast => (
           <div key={toast.id} className="pointer-events-auto">
             <Toast 

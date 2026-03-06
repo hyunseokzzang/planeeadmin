@@ -158,7 +158,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ onboardingStep }) => {
                   dataKey="users" 
                   stroke="#4f46e5" 
                   strokeWidth={hoveredKey === 'users' ? 6 : 4} 
-                  fillOpacity={1} 
                   fill="url(#colorUsers)" 
                   animationDuration={1500}
                   strokeOpacity={hoveredKey === 'users' || !hoveredKey ? 1 : 0.1}
@@ -169,7 +168,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ onboardingStep }) => {
                   dataKey="conversations" 
                   stroke="#10b981" 
                   strokeWidth={hoveredKey === 'conversations' ? 6 : 4} 
-                  fillOpacity={1} 
                   fill="url(#colorConversations)" 
                   animationDuration={1500}
                   strokeOpacity={hoveredKey === 'conversations' || !hoveredKey ? 1 : 0.1}
